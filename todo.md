@@ -2,7 +2,7 @@ link to documentation: https://docs.noroff.dev/docs/v2/holidaze/venues
 
 base URl: https://v2.api.noroff.dev/holidaze/
 
-get venues with bookings: https://v2.api.noroff.dev/holidaze/venues?_bookings=true
+get all venues with bookings: https://v2.api.noroff.dev/holidaze/venues?_bookings=true
 
 User Stories
 
@@ -16,17 +16,20 @@ User Stories
         A registered customer may create a booking at a Venue
         A registered customer may view their upcoming bookings
 
-        A user with a stud.noroff.no email may register as a Venue manager
-        A user with a stud.noroff.no email may register as a customer
+        🟩 A user with a stud.noroff.no email may register as a Venue manager
+        🟩 A user with a stud.noroff.no email may register as a customer
 
         A registered Venue manager may create a Venue
         A registered Venue manager may update a Venue they manage
         A registered Venue manager may delete a Venue they manage
         A registered Venue manager may view bookings for a Venue they manage
 
-        A registered user may login
+       🟩 A registered user may login
         A registered user may update their avatar
         A registered user may logout
+
+
+        // Fixe styling / error messages
 
 ---
 
