@@ -5,7 +5,21 @@ const replaceNameUrl = venues_by_name.replace(
   localStorage.getItem("name")
 );
 
-console.log(replaceNameUrl);
+async function getVenueByName(url) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+getVenueByName(replaceNameUrl);
 
 function VenueManagerPageView() {
   return (

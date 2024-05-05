@@ -14,4 +14,4 @@ export const all_venues = `${base_url}holidaze/venues?_bookings=true`;
 export const venues_by_name = `${base_url}holidaze/profiles/<name>/venues`;
 
 //single venue,
-const single_venue = `${base_url}/holidaze/venues`; // !! add ID on the end of the URL !!
+export const single_venue = `${base_url}holidaze/venues`; // !! add ID on the end of the URL !!
