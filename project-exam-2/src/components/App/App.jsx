@@ -4,16 +4,19 @@ import LoginPage from "../../Pages/LoginPage";
 import RegisterPage from "../../Pages/RegisterPage";
 import HomePage from "../../Pages/HomePage";
 import SingleVenuePage from "../../Pages/SingleVenuePage";
+import Layout from "../Layout";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/HomePage" element={<HomePage />} />
-        <Route path="/SingleVenue" element={<SingleVenuePage />} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/HomePage" element={<HomePage />} />
+          <Route path="/SingleVenue" element={<SingleVenuePage />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 }

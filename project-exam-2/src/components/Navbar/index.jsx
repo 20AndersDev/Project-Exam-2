@@ -1,30 +1,43 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import SearchBar from "../SearchBar";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     setIsLoggedIn(false);
-    window.location.href = "/"; // Redirect to the home page after logout
+    window.location.href = "/";
   };
 
   return (
     <nav className="navbar">
       <h1>Navbar</h1>
-      {isLoggedIn && ( // Render the navigation links only if the user is logged in
+      <SearchBar />
+      <ul>
+        <li>
+          <Link to="/HomePage">View all Venues</Link>
+        </li>
+      </ul>
+      {isLoggedIn ? (
         <ul className="nav-links">
-          <li>
-            <a href="">Home</a>
-          </li>
           <li>
             <a href="#">Profile</a>
           </li>
           <li>
-            <a href="#">Bookings</a>
+            <a href="#">View your Bookings</a>
           </li>
           <li>
             <button onClick={handleLogout}>Logout</button>
+          </li>
+        </ul>
+      ) : (
+        <ul className="nav-links">
+          <li>
+            <Link to="/">
+              <button>Login </button>
+            </Link>
           </li>
         </ul>
       )}
