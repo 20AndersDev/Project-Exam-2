@@ -16,6 +16,7 @@ async function postVenue(url, formData) {
     console.log(data);
     if (response.status === 201) {
       console.log("Venue created:", data);
+      window.location.href = "/HomePage";
     } else {
       console.log("Venue not created");
     }

@@ -63,7 +63,7 @@ function VenueList() {
   } else {
     return (
       <div>
-        <h1>Venues</h1>
+        <h1>Venues you are managing: </h1>
         <Link to="/CreateVenue">
           <button>Create a venue here</button>
         </Link>
