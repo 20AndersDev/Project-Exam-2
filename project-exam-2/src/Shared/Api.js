@@ -7,14 +7,24 @@ export const register_user = `${base_url}auth/register`;
 //login user
 export const login_user = `${base_url}auth/login?_holidaze=true`;
 
-// all venues
-export const all_venues = `${base_url}holidaze/venues?_bookings=true`;
-
 // venues by Profile (name)
-export const venues_by_name = `${base_url}holidaze/profiles/<name>/venues`;
+export const venues_by_name = `${base_url}holidaze/profiles`;
+
+export const getapikey = `${base_url}auth/create-api-key`;
+
+//venues
 
 //single venue,
 export const single_venue = `${base_url}holidaze/venues`; // !! add ID on the end of the URL !!
 
 //search venues
 export const search_venues = `${base_url}holidaze/venues/search?q=`;
+
+// all venues
+export const all_venues = `${base_url}holidaze/venues?_bookings=true`;
+
+//  Create a venue
+export const create_venue = `${base_url}holidaze/venues`;
+
+// Delete venue
+export const delete_venue = `${base_url}holidaze/venues`; // !! add ID on the end of the URL !!
