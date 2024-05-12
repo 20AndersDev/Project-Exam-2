@@ -1,6 +1,6 @@
 import { delete_venue } from "../../Shared/Api";
 
-function DeleteVenue({ id }) {
+function DeleteVenue({ id, onDelete }) {
   function deleteVenue() {
     fetch(delete_venue + "/" + id, {
       method: "DELETE",
@@ -12,9 +12,9 @@ function DeleteVenue({ id }) {
     })
       .then((response) => {
         if (response.status === 204) {
-          window.location.href = "/HomePage";
-        } else {
+          onDelete(); // Call the onDelete callback
           console.log("Venue deleted");
+        } else {
           return response.json();
         }
       })

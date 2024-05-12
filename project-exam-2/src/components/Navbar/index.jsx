@@ -4,6 +4,7 @@ import SearchBar from "../SearchBar";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const localStorageName = localStorage.getItem("name");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -26,7 +27,10 @@ function Navbar() {
             <a href="#">Profile</a>
           </li>
           <li>
-            <a href="#">View your Bookings</a>
+            {/* Include the name as a query parameter */}
+            <Link to={`/ProfileBookings?name=${localStorageName}`}>
+              <a href="#">View your Bookings</a>
+            </Link>
           </li>
           <li>
             <button onClick={handleLogout}>Logout</button>

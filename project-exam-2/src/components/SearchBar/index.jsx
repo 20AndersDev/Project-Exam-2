@@ -17,7 +17,8 @@ function SearchBar() {
   };
 
   const handleSearch = () => {
-    // Construct the API URL for searching venues with the current search query
+    window.location.href = "/SearchPageResult?q=" + searchQuery; // Redirect to the search page
+
     const searchUrl = `${search_venues}${encodeURIComponent(searchQuery)}`;
 
     // Fetch data from the API using the constructed search URL
