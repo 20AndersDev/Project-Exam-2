@@ -39,4 +39,11 @@ export const create_booking = `${base_url}holidaze/bookings`;
 
 //bookings by profile
 
-export const bookings_by_profile = `${base_url}/holidaze/profiles/`;
+export const bookings_by_profile = `${base_url}holidaze/profiles/`;
+
+//profile
+//single profile
+export const single_profile = `${base_url}holidaze/profiles`; // !! add the name on the end of the URL !!
+
+//update profile
+export const update_profile = `${base_url}holidaze/profiles`; // !! add the name on the end of the URL !!

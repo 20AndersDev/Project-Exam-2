@@ -8,6 +8,8 @@ import Layout from "../Layout";
 import CreateVenuePage from "../../Pages/CreateVenuePage";
 import SearchResults from "../SearchResult";
 import DisplaybookingsPage from "../../Pages/ProfileBookingsPage";
+import ProfilePage from "../../Pages/ProfilePage";
+import UpdateProfilePage from "../../Pages/UpdateProfilePage";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/CreateVenue" element={<CreateVenuePage />} />
           <Route path="/SearchPageResult" element={<SearchResults />} />
           <Route path="/ProfileBookings" element={<DisplaybookingsPage />} />
+          <Route path="/Profile" element={<ProfilePage />} />
+          <Route path="/UpdateProfile" element={<UpdateProfilePage />} />
         </Routes>
       </Layout>
     </Router>

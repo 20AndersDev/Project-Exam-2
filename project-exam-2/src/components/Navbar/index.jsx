@@ -4,7 +4,12 @@ import SearchBar from "../SearchBar";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const localStorageName = localStorage.getItem("name");
+  let localStorageName = localStorage.getItem("name");
+
+  // Trim the localStorageName to remove surrounding double quotes
+  if (localStorageName) {
+    localStorageName = localStorageName.replace(/^"(.*)"$/, "$1");
+  }
 
   const handleLogout = () => {
     localStorage.clear();
@@ -23,13 +28,15 @@ function Navbar() {
       </ul>
       {isLoggedIn ? (
         <ul className="nav-links">
-          <li>
-            <a href="#">Profile</a>
-          </li>
+          <Link to="/Profile">
+            <li>
+              <p>Profile</p>
+            </li>
+          </Link>
           <li>
             {/* Include the name as a query parameter */}
             <Link to={`/ProfileBookings?name=${localStorageName}`}>
-              <a href="#">View your Bookings</a>
+              <p>View your Bookings</p>
             </Link>
           </li>
           <li>
