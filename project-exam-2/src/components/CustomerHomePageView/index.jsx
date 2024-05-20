@@ -50,6 +50,13 @@ const VenueDescription = styled.p`
   color: #555;
 `;
 
+const VenueImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+`;
+
 function DisplayVenues() {
   const { data, isLoading, isError } = useApi(all_venues);
 
@@ -61,14 +68,28 @@ function DisplayVenues() {
     return <PageContainer>Error fetching data</PageContainer>;
   }
 
+  console.log(data);
+
+  const handleImageError = (event) => {
+    event.target.src = "default-image-url.jpg"; // Provide a path to a default image
+  };
+
   return (
     <PageContainer>
       <Title>Customer Home Page</Title>
       <VenueList>
         {data.map((venue) => (
           <VenueItem key={venue.id}>
+            {venue.media && venue.media.length > 0 && venue.media[0].url ? (
+              <VenueImage
+                src={venue.media[0].url}
+                alt={venue.media[0].alt || venue.name}
+                onError={handleImageError}
+              />
+            ) : (
+              <VenueImage src="default-image-url.jpg" alt="Default Image" />
+            )}
             <VenueName>
-              {/* Use Link component to redirect to SingleVenue with ID as query parameter */}
               <Link to={`/SingleVenue?id=${venue.id}`}>{venue.name}</Link>
             </VenueName>
             <VenueDescription>{venue.description}</VenueDescription>

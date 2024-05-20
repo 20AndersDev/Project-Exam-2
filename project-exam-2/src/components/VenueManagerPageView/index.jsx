@@ -68,56 +68,89 @@ const VenueDetails = styled.p`
   margin: 0.5rem 0;
 `;
 
+const VenueImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+`;
+
 async function getVenueByName(url) {
   try {
     const accessToken = localStorage.getItem("token");
+    const apiKey = localStorage.getItem("apikey");
+
+    if (!accessToken || !apiKey) {
+      throw new Error("Missing token or API key");
+    }
 
     const options = {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "X-Noroff-API-Key": localStorage.getItem("apikey"),
+        "X-Noroff-API-Key": apiKey,
       },
     };
 
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      const errorText = await response.text();
+      throw new Error(`Network response was not ok: ${errorText}`);
     }
+
     const data = await response.json();
-    console.log(data);
-    return data; // Return the fetched data
+    return data;
   } catch (error) {
     console.error("Error fetching venue data:", error);
-    throw error; // Rethrow the error for handling outside this function if necessary
+    throw error;
   }
 }
 
 function VenueList() {
-  const replaceNameUrl = `${venues_by_name}/${localStorage
-    .getItem("name")
-    .replace(/"/g, "")}/venues`;
   const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [apiKeyLoaded, setApiKeyLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const newData = await getVenueByName(replaceNameUrl);
-        setData(newData);
-      } catch (error) {
-        // Handle error
-        console.error("Error fetching venue data:", error);
-      }
-    };
-    fetchData();
+    const apiKey = localStorage.getItem("apikey");
+    const token = localStorage.getItem("token");
+
+    if (apiKey && token) {
+      setApiKeyLoaded(true);
+    }
   }, []);
 
-  if (data === null) {
+  useEffect(() => {
+    if (apiKeyLoaded) {
+      const fetchData = async () => {
+        try {
+          const replaceNameUrl = `${venues_by_name}/${localStorage
+            .getItem("name")
+            .replace(/"/g, "")}/venues`;
+          const newData = await getVenueByName(replaceNameUrl);
+          setData(newData);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [apiKeyLoaded]);
+
+  console.log(data);
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (data.length === 0) {
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (data === null || data.length === 0) {
     return (
       <div>
         <Subtitle>No venues found</Subtitle>
@@ -135,6 +168,11 @@ function VenueList() {
         </Link>
         {data.data.map((venue, index) => (
           <VenueItem key={index}>
+            {venue.media && venue.media.length > 0 && venue.media[0].url ? (
+              <VenueImage src={venue.media[0].url} alt={venue.name} />
+            ) : (
+              <VenueImage src="default-image-url" alt="Default Image" />
+            )}
             <VenueName>
               <Link to={`/SingleVenue?id=${venue.id}`}>{venue.name}</Link>
             </VenueName>
