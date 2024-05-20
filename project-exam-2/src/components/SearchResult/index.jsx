@@ -1,5 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { search_venues } from "../../Shared/Api";
+import styled from "styled-components";
+
+// Styled Components
+const ResultsContainer = styled.div`
+  padding: 2rem;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ResultItem = styled.div`
+  background: #ffffff;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+`;
+
+const ResultTitle = styled.h2`
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+`;
+
+const ResultDescription = styled.p`
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
+`;
+
+const Message = styled.div`
+  font-size: 1.25rem;
+  color: #555;
+  margin-top: 2rem;
+`;
 
 function SearchResults() {
   const [searchResults, setSearchResults] = useState(null);
@@ -35,26 +81,27 @@ function SearchResults() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Message>Loading...</Message>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <Message>Error: {error.message}</Message>;
   }
 
   if (!searchResults || searchResults.length === 0) {
-    return <div>No results found</div>;
+    return <Message>No results found</Message>;
   }
 
   return (
-    <div>
+    <ResultsContainer>
+      <Title>Search Results</Title>
       {searchResults.data.map((result) => (
-        <div key={result.id}>
-          <h2>{result.name}</h2>
-          <p>{result.description}</p>
-        </div>
+        <ResultItem key={result.id}>
+          <ResultTitle>{result.name}</ResultTitle>
+          <ResultDescription>{result.description}</ResultDescription>
+        </ResultItem>
       ))}
-    </div>
+    </ResultsContainer>
   );
 }
 

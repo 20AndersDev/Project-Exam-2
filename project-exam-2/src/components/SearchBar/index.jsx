@@ -1,16 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { search_venues } from "../../Shared/Api"; // Importing the API endpoint
-import useSearchApi from "../../Hooks/Apihooks/Search"; // Importing the custom hook
+import React, { useState } from "react";
+import styled from "styled-components";
+
+// Styled Components
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const SearchInput = styled.input`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+`;
+
+const SearchButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
 
 function SearchBar() {
   const [searchQuery, setSearchQuery] = useState(""); // State to track the search query
-
-  // State to track search results, loading state, and error state
-  const { data, isLoading, isError, fetchData } = useSearchApi();
-
-  useEffect(() => {
-    console.log("Data updated:", data);
-  }, [data]);
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value); // Update searchQuery state as the user types
@@ -18,26 +32,18 @@ function SearchBar() {
 
   const handleSearch = () => {
     window.location.href = "/SearchPageResult?q=" + searchQuery; // Redirect to the search page
-
-    const searchUrl = `${search_venues}${encodeURIComponent(searchQuery)}`;
-
-    // Fetch data from the API using the constructed search URL
-    fetchData(searchUrl);
   };
 
   return (
-    <div>
-      <input
+    <SearchContainer>
+      <SearchInput
         type="text"
         placeholder="Search..."
         value={searchQuery}
         onChange={handleInputChange}
       />
-      <button onClick={handleSearch} disabled={isLoading}>
-        {isLoading ? "Searching..." : "Search"}
-      </button>
-      {isError && <div>Error: Failed to fetch data</div>}
-    </div>
+      <SearchButton onClick={handleSearch}>Search</SearchButton>
+    </SearchContainer>
   );
 }
 

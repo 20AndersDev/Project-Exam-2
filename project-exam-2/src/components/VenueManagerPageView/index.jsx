@@ -1,6 +1,72 @@
 import { useState, useEffect } from "react";
 import { venues_by_name } from "../../Shared/Api";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+// Styled Components
+const PageContainer = styled.div`
+  padding: 2rem;
+  background: #f0f2f5;
+  min-height: 100vh;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+`;
+
+const Subtitle = styled.h2`
+  font-size: 1.5rem;
+  color: #555;
+`;
+
+const Button = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
+const VenueListContainer = styled.div`
+  margin-top: 2rem;
+`;
+
+const VenueItem = styled.div`
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  &:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const VenueName = styled.h2`
+  font-size: 1.25rem;
+  color: #007bff;
+  margin: 0;
+  a {
+    text-decoration: none;
+    color: inherit;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+const VenueDetails = styled.p`
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
+`;
 
 async function getVenueByName(url) {
   try {
@@ -54,44 +120,43 @@ function VenueList() {
   if (data.length === 0) {
     return (
       <div>
-        <h2>No venues found</h2>
+        <Subtitle>No venues found</Subtitle>
         <Link to="/CreateVenue">
-          <button>Create a venue here</button>
+          <Button>Create a venue here</Button>
         </Link>
       </div>
     );
   } else {
     return (
-      <div>
-        <h1>Venues you are managing: </h1>
+      <VenueListContainer>
+        <Subtitle>Venues you are managing:</Subtitle>
         <Link to="/CreateVenue">
-          <button>Create a venue here</button>
+          <Button>Create a venue here</Button>
         </Link>
         {data.data.map((venue, index) => (
-          <div key={index}>
-            <Link to={`/SingleVenue?id=${venue.id}`}>
-              {/* Link to SingleVenue with venue ID */}
-              <h2>{venue.name}</h2>
-            </Link>
-            <p>{venue.description}</p>
-            <p>Max guests: {venue.maxGuests}</p>
-            <p>Price: {venue.price}</p>
+          <VenueItem key={index}>
+            <VenueName>
+              <Link to={`/SingleVenue?id=${venue.id}`}>{venue.name}</Link>
+            </VenueName>
+            <VenueDetails>{venue.description}</VenueDetails>
+            <VenueDetails>Max guests: {venue.maxGuests}</VenueDetails>
+            <VenueDetails>Price: {venue.price}</VenueDetails>
             {/* Add additional venue details here */}
-          </div>
+          </VenueItem>
         ))}
-      </div>
+      </VenueListContainer>
     );
   }
 }
 
 function VenueManagerPageView() {
   return (
-    <div>
-      <h1>
+    <PageContainer>
+      <Title>
         Welcome venue manager, {localStorage.getItem("name").replace(/"/g, "")}
-      </h1>
+      </Title>
       <VenueList />
-    </div>
+    </PageContainer>
   );
 }
 

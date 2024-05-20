@@ -1,6 +1,59 @@
 import { single_profile } from "../../Shared/Api";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+// Styled Components
+const ProfileContainer = styled.div`
+  padding: 2rem;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+`;
+
+const ProfileDetails = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const Avatar = styled.img`
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+`;
+
+const Detail = styled.p`
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
+`;
+
+const EditButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  &:hover {
+    background: #0056b3;
+  }
+`;
 
 function DisplayProfile() {
   const [profile, setProfile] = useState(null); // State to hold profile data
@@ -37,20 +90,20 @@ function DisplayProfile() {
 
   // Render profile data if available
   return (
-    <div>
-      <h1>Your Profile</h1>
+    <ProfileContainer>
+      <Title>Your Profile</Title>
       {profile && (
-        <div>
-          <img src={profile.data.avatar.url} alt="Profile Avatar" />
-          <p>Name: {profile.data.name}</p>
-          <p>Email: {profile.data.email}</p>
-          <p>Bio: {profile.data.bio}</p>
+        <ProfileDetails>
+          <Avatar src={profile.data.avatar.url} alt="Profile Avatar" />
+          <Detail>Name: {profile.data.name}</Detail>
+          <Detail>Email: {profile.data.email}</Detail>
+          <Detail>Bio: {profile.data.bio}</Detail>
           <Link to="/UpdateProfile">
-            <button>Edit profile</button>
+            <EditButton>Edit profile</EditButton>
           </Link>
-        </div>
+        </ProfileDetails>
       )}
-    </div>
+    </ProfileContainer>
   );
 }
 

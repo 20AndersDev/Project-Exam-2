@@ -1,6 +1,45 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import SearchBar from "../SearchBar";
+
+// Styled Components
+const NavbarContainer = styled.nav`
+  background: #333;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Logo = styled.h1`
+  font-size: 1.5rem;
+`;
+
+const NavLinks = styled.ul`
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+`;
+
+const NavItem = styled.li`
+  a {
+    color: white;
+    text-decoration: none;
+  }
+`;
+
+const Button = styled.button`
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  &:hover {
+    background: #0056b3;
+  }
+`;
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -18,41 +57,41 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar">
-      <h1>Navbar</h1>
+    <NavbarContainer>
+      <Logo>Navbar</Logo>
       <SearchBar />
-      <ul>
-        <li>
+      <NavLinks>
+        <NavItem>
           <Link to="/HomePage">View all Venues</Link>
-        </li>
-      </ul>
+        </NavItem>
+      </NavLinks>
       {isLoggedIn ? (
-        <ul className="nav-links">
-          <Link to="/Profile">
-            <li>
+        <NavLinks>
+          <NavItem>
+            <Link to="/Profile">
               <p>Profile</p>
-            </li>
-          </Link>
-          <li>
+            </Link>
+          </NavItem>
+          <NavItem>
             {/* Include the name as a query parameter */}
             <Link to={`/ProfileBookings?name=${localStorageName}`}>
               <p>View your Bookings</p>
             </Link>
-          </li>
-          <li>
-            <button onClick={handleLogout}>Logout</button>
-          </li>
-        </ul>
+          </NavItem>
+          <NavItem>
+            <Button onClick={handleLogout}>Logout</Button>
+          </NavItem>
+        </NavLinks>
       ) : (
-        <ul className="nav-links">
-          <li>
+        <NavLinks>
+          <NavItem>
             <Link to="/">
-              <button>Login </button>
+              <Button>Login</Button>
             </Link>
-          </li>
-        </ul>
+          </NavItem>
+        </NavLinks>
       )}
-    </nav>
+    </NavbarContainer>
   );
 }
 

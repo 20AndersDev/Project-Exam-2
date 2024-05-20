@@ -2,8 +2,81 @@ import { useState, useEffect } from "react";
 import { single_venue, update_venue } from "../../Shared/Api";
 import DeleteVenue from "../DeleteVenue";
 import useApi from "../../Hooks/Apihooks/";
-import CreateBooking from "../CreateBooking";
 import Calendar from "react-calendar";
+import styled from "styled-components";
+
+// Styled Components
+const PageContainer = styled.div`
+  padding: 2rem;
+  background: #f0f2f5;
+  min-height: 100vh;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+`;
+
+const VenueDetails = styled.div`
+  margin: 2rem 0;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Detail = styled.p`
+  font-size: 1rem;
+  color: #555;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const Label = styled.label`
+  font-size: 1rem;
+  color: #333;
+`;
+
+const Input = styled.input`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
+const BookingContainer = styled.div`
+  margin-top: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const BookingItem = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const CalendarContainer = styled.div`
+  margin-top: 2rem;
+`;
 
 function DisplaySingleVenue() {
   const [editing, setEditing] = useState(false);
@@ -70,11 +143,11 @@ function DisplaySingleVenue() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PageContainer>Loading...</PageContainer>;
   }
 
   if (isError || !data) {
-    return <div>Error fetching data</div>;
+    return <PageContainer>Error fetching data</PageContainer>;
   }
 
   const ownerName = data.owner ? data.owner.name : null;
@@ -88,83 +161,87 @@ function DisplaySingleVenue() {
   const bookings = data.bookings || [];
 
   return (
-    <div>
-      <h1>Single Venue</h1>
-      <p>Name: {data.name}</p>
-      <p>Description: {data.description}</p>
-      <p>Price: {data.price}</p>
-      <p>Max Guests: {data.maxGuests}</p>
+    <PageContainer>
+      <Title>Single Venue</Title>
+      <VenueDetails>
+        <Detail>Name: {data.name}</Detail>
+        <Detail>Description: {data.description}</Detail>
+        <Detail>Price: {data.price}</Detail>
+        <Detail>Max Guests: {data.maxGuests}</Detail>
+      </VenueDetails>
 
       {editing ? (
-        <form onSubmit={handleSubmit}>
-          <label>
+        <Form onSubmit={handleSubmit}>
+          <Label>
             Name:
-            <input
+            <Input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
             />
-          </label>
-          <label>
+          </Label>
+          <Label>
             Description:
-            <input
+            <Input
               type="text"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
             />
-          </label>
-          <label>
+          </Label>
+          <Label>
             Price:
-            <input
+            <Input
               type="number"
               name="price"
               value={formData.price}
               onChange={handleInputChange}
             />
-          </label>
-          <label>
+          </Label>
+          <Label>
             Max Guests:
-            <input
+            <Input
               type="number"
               name="maxGuests"
               value={formData.maxGuests}
               onChange={handleInputChange}
             />
-          </label>
-          <button type="submit">Update Venue</button>
-        </form>
+          </Label>
+          <Button type="submit">Update Venue</Button>
+        </Form>
       ) : (
         <>
           {ownerName === trimmedLocalStorageName && (
-            <button onClick={() => setEditing(true)}>Edit</button>
+            <Button onClick={() => setEditing(true)}>Edit</Button>
           )}
-          {!isVenueManager && <Calendar />}
+          {!isVenueManager && (
+            <CalendarContainer>
+              <Calendar />
+            </CalendarContainer>
+          )}
           {isVenueManager && <DeleteVenue id={id} onDelete={handleDelete} />}
         </>
       )}
 
-      <div>
-        {ownerName === trimmedLocalStorageName && (
-          <div>
-            <p>Bookings on your venue:</p>
-            {bookings.length > 0 ? (
-              bookings.map((booking) => (
-                <div key={booking.id}>
-                  <p>Name: {booking.customer.name}</p>
-                  <p>Email: {booking.customer.email}</p>
-                  <p>Booking Start: {booking.dateFrom}</p>
-                  <p>Booking End: {booking.dateTo}</p>
-                </div>
-              ))
-            ) : (
-              <p>No bookings</p>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+      {ownerName === trimmedLocalStorageName && (
+        <BookingContainer>
+          <p>Bookings on your venue:</p>
+          {bookings.length > 0 ? (
+            bookings.map((booking) => (
+              <BookingItem key={booking.id}>
+                <p>Name: {booking.customer.name}</p>
+                <p>Email: {booking.customer.email}</p>
+                <p>Booking Start: {booking.dateFrom}</p>
+                <p>Booking End: {booking.dateTo}</p>
+              </BookingItem>
+            ))
+          ) : (
+            <p>No bookings</p>
+          )}
+        </BookingContainer>
+      )}
+    </PageContainer>
   );
 }
 

@@ -1,5 +1,51 @@
 import { useState } from "react";
 import { update_profile } from "../../Shared/Api";
+import styled from "styled-components";
+
+// Styled Components
+const UpdateProfileContainer = styled.div`
+  padding: 2rem;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+`;
+
+const Label = styled.label`
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+`;
+
+const Input = styled.input`
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 400px;
+`;
+
+const Button = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  &:hover {
+    background: #0056b3;
+  }
+`;
 
 function UpdateProfile() {
   const [bio, setBio] = useState("");
@@ -50,28 +96,26 @@ function UpdateProfile() {
   }
 
   return (
-    <div>
-      <h1>Update Profile</h1>
-      <label>
+    <UpdateProfileContainer>
+      <Title>Update Profile</Title>
+      <Label>
         Update bio:
-        <input
+        <Input
           type="text"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
         />
-      </label>
-      <br />
-      <label>
+      </Label>
+      <Label>
         Update Avatar:
-        <input
+        <Input
           type="url"
-          value={avatar.url}
+          value={avatar}
           onChange={(e) => setAvatar(e.target.value)}
         />
-      </label>
-      <br />
-      <button onClick={handleUpdate}>Update Profile</button>
-    </div>
+      </Label>
+      <Button onClick={handleUpdate}>Update Profile</Button>
+    </UpdateProfileContainer>
   );
 }
 
