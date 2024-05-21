@@ -4,6 +4,7 @@ import DeleteVenue from "../DeleteVenue";
 import useApi from "../../Hooks/Apihooks/";
 import Calendar from "react-calendar";
 import styled from "styled-components";
+import BookVenue from "../CreateBooking"; // Ensure the import is correct
 
 // Styled Components
 const PageContainer = styled.div`
@@ -156,7 +157,8 @@ function DisplaySingleVenue() {
     ? localStorageName.replace(/^"(.*)"$/, "$1")
     : null;
 
-  const isVenueManager = localStorage.getItem("VenueManager") === "true";
+  const accessToken = localStorage.getItem("token");
+  const isVenueManager = JSON.parse(localStorage.getItem("VenueManager"));
 
   const bookings = data.bookings || [];
 
@@ -169,7 +171,6 @@ function DisplaySingleVenue() {
         <Detail>Price: {data.price}</Detail>
         <Detail>Max Guests: {data.maxGuests}</Detail>
       </VenueDetails>
-
       {editing ? (
         <Form onSubmit={handleSubmit}>
           <Label>
@@ -213,33 +214,38 @@ function DisplaySingleVenue() {
       ) : (
         <>
           {ownerName === trimmedLocalStorageName && (
-            <Button onClick={() => setEditing(true)}>Edit</Button>
+            <>
+              <Button onClick={() => setEditing(true)}>Edit Venue</Button>
+              <DeleteVenue id={id} onDelete={handleDelete} />
+            </>
           )}
-          {!isVenueManager && (
-            <CalendarContainer>
-              <Calendar />
-            </CalendarContainer>
+          {accessToken && !isVenueManager && (
+            <>
+              <BookVenue />
+              <CalendarContainer>
+                <Calendar />
+              </CalendarContainer>
+            </>
+          )}{" "}
+          {/* Conditional rendering for CreateBooking */}
+          {ownerName === trimmedLocalStorageName && (
+            <BookingContainer>
+              <p>Bookings on your venue:</p>
+              {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                  <BookingItem key={booking.id}>
+                    <p>Name: {booking.customer.name}</p>
+                    <p>Email: {booking.customer.email}</p>
+                    <p>Booking Start: {booking.dateFrom}</p>
+                    <p>Booking End: {booking.dateTo}</p>
+                  </BookingItem>
+                ))
+              ) : (
+                <p>No bookings</p>
+              )}
+            </BookingContainer>
           )}
-          {isVenueManager && <DeleteVenue id={id} onDelete={handleDelete} />}
         </>
-      )}
-
-      {ownerName === trimmedLocalStorageName && (
-        <BookingContainer>
-          <p>Bookings on your venue:</p>
-          {bookings.length > 0 ? (
-            bookings.map((booking) => (
-              <BookingItem key={booking.id}>
-                <p>Name: {booking.customer.name}</p>
-                <p>Email: {booking.customer.email}</p>
-                <p>Booking Start: {booking.dateFrom}</p>
-                <p>Booking End: {booking.dateTo}</p>
-              </BookingItem>
-            ))
-          ) : (
-            <p>No bookings</p>
-          )}
-        </BookingContainer>
       )}
     </PageContainer>
   );

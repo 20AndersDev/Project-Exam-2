@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { search_venues } from "../../Shared/Api";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 // Styled Components
 const ResultsContainer = styled.div`
@@ -47,6 +48,13 @@ const Message = styled.div`
   margin-top: 2rem;
 `;
 
+const Image = styled.img`
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+`;
+
 function SearchResults() {
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,8 +73,6 @@ function SearchResults() {
         const data = await response.json();
         setSearchResults(data);
         setIsLoading(false);
-        console.log(data);
-        console.log(response);
       } catch (error) {
         setError(error);
         setIsLoading(false);
@@ -96,10 +102,15 @@ function SearchResults() {
     <ResultsContainer>
       <Title>Search Results</Title>
       {searchResults.data.map((result) => (
-        <ResultItem key={result.id}>
-          <ResultTitle>{result.name}</ResultTitle>
-          <ResultDescription>{result.description}</ResultDescription>
-        </ResultItem>
+        <Link to={`/SingleVenue?id=${result.id}`}>
+          <ResultItem key={result.id}>
+            {result.media && result.media.length > 0 && (
+              <Image src={result.media[0].url} alt={result.media[0].alt} />
+            )}
+            <ResultTitle>{result.name}</ResultTitle>
+            <ResultDescription>{result.description}</ResultDescription>
+          </ResultItem>
+        </Link>
       ))}
     </ResultsContainer>
   );

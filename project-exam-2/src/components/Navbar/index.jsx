@@ -56,6 +56,9 @@ function Navbar() {
     window.location.href = "/";
   };
 
+  const accessToken = localStorage.getItem("token");
+  const isVenueManager = localStorage.getItem("VenueManager");
+
   return (
     <NavbarContainer>
       <Logo>Navbar</Logo>
@@ -72,12 +75,13 @@ function Navbar() {
               <p>Profile</p>
             </Link>
           </NavItem>
-          <NavItem>
-            {/* Include the name as a query parameter */}
-            <Link to={`/ProfileBookings?name=${localStorageName}`}>
-              <p>View your Bookings</p>
-            </Link>
-          </NavItem>
+          {accessToken && !isVenueManager && (
+            <NavItem>
+              <Link to={`/ProfileBookings?name=${localStorageName}`}>
+                <p>View your Bookings</p>
+              </Link>
+            </NavItem>
+          )}
           <NavItem>
             <Button onClick={handleLogout}>Logout</Button>
           </NavItem>
