@@ -57,7 +57,7 @@ function Navbar() {
   };
 
   const accessToken = localStorage.getItem("token");
-  const isVenueManager = localStorage.getItem("VenueManager");
+  const isVenueManager = JSON.parse(localStorage.getItem("VenueManager"));
 
   return (
     <NavbarContainer>

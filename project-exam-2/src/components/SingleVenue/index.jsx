@@ -4,37 +4,46 @@ import DeleteVenue from "../DeleteVenue";
 import useApi from "../../Hooks/Apihooks/";
 import Calendar from "react-calendar";
 import styled from "styled-components";
-import BookVenue from "../CreateBooking"; // Ensure the import is correct
+import BookVenue from "../CreateBooking";
+import "react-calendar/dist/Calendar.css"; // Import the default calendar CSS
 
 // Styled Components
 const PageContainer = styled.div`
   padding: 2rem;
   background: #f0f2f5;
   min-height: 100vh;
+  font-family: "Arial", sans-serif;
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #333;
+  text-align: center;
+  margin-bottom: 1rem;
 `;
 
 const VenueDetails = styled.div`
   margin: 2rem 0;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Detail = styled.p`
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #555;
+  margin: 0.5rem 0;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Label = styled.label`
@@ -43,10 +52,11 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
+  width: 100%;
 `;
 
 const Button = styled.button`
@@ -54,9 +64,10 @@ const Button = styled.button`
   background: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background 0.3s;
   margin-top: 1rem;
   &:hover {
     background: #0056b3;
@@ -65,10 +76,10 @@ const Button = styled.button`
 
 const BookingContainer = styled.div`
   margin-top: 2rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const BookingItem = styled.div`
@@ -77,6 +88,76 @@ const BookingItem = styled.div`
 
 const CalendarContainer = styled.div`
   margin-top: 2rem;
+  .react-calendar {
+    width: 100%;
+    max-width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .react-calendar__navigation {
+    display: flex;
+    margin-bottom: 1rem;
+    button {
+      color: #007bff;
+      min-width: 44px;
+      background: none;
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+  }
+
+  .react-calendar__month-view__weekdays {
+    text-align: center;
+    font-size: 1rem;
+    color: #007bff;
+    text-transform: uppercase;
+  }
+
+  .react-calendar__month-view__days {
+    font-size: 0.875rem;
+  }
+
+  .react-calendar__tile {
+    max-width: 100%;
+    background: none;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    border-radius: 6px;
+    transition: background 0.3s, color 0.3s;
+    &:hover {
+      background: #e6f7ff;
+      color: #007bff;
+    }
+  }
+
+  .react-calendar__tile--now {
+    background: #e6f7ff;
+    color: #007bff;
+  }
+
+  .react-calendar__tile--active {
+    background: #007bff;
+    color: white;
+  }
+
+  .react-calendar__tile--active:hover {
+    background: #0056b3;
+  }
+`;
+
+const StyledImage = styled.img`
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+`;
+
+const StyledH1 = styled.h1`
+  color: #333;
+  font-size: 2em;
+  margin-bottom: 0.5em;
 `;
 
 function DisplaySingleVenue() {
@@ -94,13 +175,14 @@ function DisplaySingleVenue() {
   const { data, isLoading, isError } = useApi(url);
 
   useEffect(() => {
-    if (data && data.maxGuests) {
-      setFormData({
+    if (data && data.id) {
+      setFormData((prevData) => ({
+        ...prevData,
         name: data.name,
         description: data.description,
-        price: parseInt(data.price),
-        maxGuests: parseInt(data.maxGuests),
-      });
+        price: data.price,
+        maxGuests: data.maxGuests,
+      }));
     }
   }, [data]);
 
@@ -162,12 +244,33 @@ function DisplaySingleVenue() {
 
   const bookings = data.bookings || [];
 
+  const bookedDates =
+    data && data.bookings
+      ? data.bookings.map((booking) => ({
+          from: new Date(booking.dateFrom),
+          to: new Date(booking.dateTo),
+        }))
+      : [];
+
+  const isPastDate = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  const isBookedDate = (date) => {
+    return bookedDates.some((range) => date >= range.from && date <= range.to);
+  };
+
   return (
     <PageContainer>
       <Title>Single Venue</Title>
       <VenueDetails>
-        <Detail>Name: {data.name}</Detail>
-        <Detail>Description: {data.description}</Detail>
+        {data.media && data.media.length > 0 && (
+          <StyledImage src={data.media[0].url} alt={data.media[0].alt} />
+        )}
+        <StyledH1>{data.name}</StyledH1>
+        <Detail>{data.description}</Detail>
         <Detail>Price: {data.price}</Detail>
         <Detail>Max Guests: {data.maxGuests}</Detail>
       </VenueDetails>
@@ -219,15 +322,29 @@ function DisplaySingleVenue() {
               <DeleteVenue id={id} onDelete={handleDelete} />
             </>
           )}
-          {accessToken && !isVenueManager && (
+          {!accessToken && !isVenueManager && (
             <>
-              <BookVenue />
               <CalendarContainer>
-                <Calendar />
+                <Calendar
+                  tileDisabled={({ date }) =>
+                    isPastDate(date) || isBookedDate(date)
+                  }
+                />
               </CalendarContainer>
             </>
-          )}{" "}
-          {/* Conditional rendering for CreateBooking */}
+          )}
+          {accessToken && !isVenueManager && (
+            <>
+              <CalendarContainer>
+                <Calendar
+                  tileDisabled={({ date }) =>
+                    isPastDate(date) || isBookedDate(date)
+                  }
+                />
+              </CalendarContainer>
+              <BookVenue id={id} />
+            </>
+          )}
           {ownerName === trimmedLocalStorageName && (
             <BookingContainer>
               <p>Bookings on your venue:</p>
