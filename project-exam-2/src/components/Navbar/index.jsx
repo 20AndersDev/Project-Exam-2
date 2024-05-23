@@ -2,47 +2,78 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import SearchBar from "../SearchBar";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 // Styled Components
 const NavbarContainer = styled.nav`
-  background: #333;
+  background: #ff7f50; /* Warm coral color */
   color: white;
-  padding: 1rem;
+  padding: 1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Logo = styled.h1`
   font-size: 1.5rem;
+  margin: 0;
 `;
 
 const NavLinks = styled.ul`
   list-style: none;
   display: flex;
   gap: 1rem;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 950px) {
+    flex-direction: column;
+    width: 100%;
+    display: ${(props) => (props.isOpen ? "flex" : "none")};
+    padding-top: 1rem;
+  }
 `;
 
 const NavItem = styled.li`
-  a {
+  a,
+  Link {
+    display: flex;
     color: white;
     text-decoration: none;
+    align-items: center;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
 const Button = styled.button`
-  background: #007bff;
+  background: #ffa500; /* Warm orange color */
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
   &:hover {
-    background: #0056b3;
+    background: #ff8c00; /* Darker orange */
+  }
+`;
+
+const HamburgerMenu = styled.div`
+  display: none;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block;
   }
 `;
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [menuOpen, setMenuOpen] = useState(false);
   let localStorageName = localStorage.getItem("name");
 
   // Trim the localStorageName to remove surrounding double quotes
@@ -61,40 +92,48 @@ function Navbar() {
 
   return (
     <NavbarContainer>
-      <Logo>Navbar</Logo>
-      <SearchBar />
-      <NavLinks>
+      <Logo>Holidaze</Logo>
+
+      <HamburgerMenu onClick={() => setMenuOpen(!menuOpen)}>
+        <GiHamburgerMenu size={24} color="white" />
+      </HamburgerMenu>
+      <NavLinks isOpen={menuOpen}>
+        <SearchBar />
         <NavItem>
-          <Link to="/HomePage">View all Venues</Link>
+          <Link to="/HomePage">
+            <p>Home</p>
+          </Link>
         </NavItem>
-      </NavLinks>
-      {isLoggedIn ? (
-        <NavLinks>
-          <NavItem>
-            <Link to="/Profile">
-              <p>Profile</p>
-            </Link>
-          </NavItem>
-          {accessToken && !isVenueManager && (
+        {isLoggedIn ? (
+          <>
             <NavItem>
-              <Link to={`/ProfileBookings?name=${localStorageName}`}>
-                <p>View your Bookings</p>
+              <Link to="/Profile">
+                <p>Profile</p>
               </Link>
             </NavItem>
-          )}
-          <NavItem>
-            <Button onClick={handleLogout}>Logout</Button>
-          </NavItem>
-        </NavLinks>
-      ) : (
-        <NavLinks>
+            {accessToken && !isVenueManager && (
+              <NavItem>
+                <Link to={`/ProfileBookings?name=${localStorageName}`}>
+                  <p>View your Bookings</p>
+                </Link>
+              </NavItem>
+            )}
+            <NavItem>
+              <p>
+                <Button onClick={handleLogout}>Logout</Button>
+              </p>
+            </NavItem>
+          </>
+        ) : (
           <NavItem>
             <Link to="/">
-              <Button>Login</Button>
+              <p>
+                <Button>Login</Button>
+              </p>
             </Link>
           </NavItem>
-        </NavLinks>
-      )}
+        )}
+      </NavLinks>
     </NavbarContainer>
   );
 }

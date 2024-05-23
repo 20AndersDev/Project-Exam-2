@@ -80,10 +80,6 @@ async function getVenueByName(url) {
     const accessToken = localStorage.getItem("token");
     const apiKey = localStorage.getItem("apikey");
 
-    if (!accessToken || !apiKey) {
-      throw new Error("Missing token or API key");
-    }
-
     const options = {
       method: "GET",
       headers: {
@@ -111,19 +107,12 @@ function VenueList() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [apiKeyLoaded, setApiKeyLoaded] = useState(false);
 
   useEffect(() => {
-    const apiKey = localStorage.getItem("apikey");
-    const token = localStorage.getItem("token");
+    const storedApiKey = localStorage.getItem("apikey");
+    const storedToken = localStorage.getItem("token");
 
-    if (apiKey && token) {
-      setApiKeyLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (apiKeyLoaded) {
+    if (storedApiKey && storedToken) {
       const fetchData = async () => {
         try {
           const replaceNameUrl = `${venues_by_name}/${localStorage
@@ -139,9 +128,10 @@ function VenueList() {
       };
       fetchData();
     }
-  }, [apiKeyLoaded]);
+  }, []);
 
   console.log(data);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }

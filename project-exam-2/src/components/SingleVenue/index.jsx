@@ -13,6 +13,8 @@ const PageContainer = styled.div`
   background: #f0f2f5;
   min-height: 100vh;
   font-family: "Arial", sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
 const Title = styled.h1`
@@ -28,6 +30,8 @@ const VenueDetails = styled.div`
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 2rem auto;
 `;
 
 const Detail = styled.p`
@@ -44,6 +48,8 @@ const Form = styled.form`
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 const Label = styled.label`
@@ -80,6 +86,8 @@ const BookingContainer = styled.div`
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 const BookingItem = styled.div`
@@ -88,6 +96,8 @@ const BookingItem = styled.div`
 
 const CalendarContainer = styled.div`
   margin-top: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
   .react-calendar {
     width: 100%;
     max-width: 100%;
@@ -150,6 +160,7 @@ const CalendarContainer = styled.div`
 
 const StyledImage = styled.img`
   width: 100%;
+  max-width: 800px;
   height: auto;
   object-fit: cover;
 `;
@@ -264,7 +275,6 @@ function DisplaySingleVenue() {
 
   return (
     <PageContainer>
-      <Title>Single Venue</Title>
       <VenueDetails>
         {data.media && data.media.length > 0 && (
           <StyledImage src={data.media[0].url} alt={data.media[0].alt} />

@@ -14,11 +14,21 @@ const Title = styled.h1`
   font-size: 2rem;
   color: #333;
   margin-bottom: 2rem;
+  text-align: center;
 `;
 
 const VenueList = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
   list-style: none;
   padding: 0;
+  margin: 0 auto;
+  max-width: 1200px; /* To center the content and avoid overflow */
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const VenueItem = styled.li`
@@ -26,19 +36,34 @@ const VenueItem = styled.li`
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 350px; /* Set a fixed height */
+  overflow: hidden; /* Ensure content doesn't overflow */
+
   &:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   }
 `;
 
+const VenueImage = styled.img`
+  width: 100%;
+  height: 150px; /* Set a fixed height */
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+`;
+
 const VenueName = styled.h2`
   font-size: 1.5rem;
   color: #007bff;
-  margin: 0;
+  margin: 0.5rem 0;
+
   a {
     text-decoration: none;
     color: inherit;
+
     &:hover {
       text-decoration: underline;
     }
@@ -48,13 +73,11 @@ const VenueName = styled.h2`
 const VenueDescription = styled.p`
   font-size: 1rem;
   color: #555;
-`;
-
-const VenueImage = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
 `;
 
 function DisplayVenues() {
@@ -76,7 +99,7 @@ function DisplayVenues() {
 
   return (
     <PageContainer>
-      <Title>Customer Home Page</Title>
+      <Title>Venues available for booking</Title>
       <VenueList>
         {data.map((venue) => (
           <VenueItem key={venue.id}>

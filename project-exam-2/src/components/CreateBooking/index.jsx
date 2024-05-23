@@ -6,6 +6,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-items: center; // Add this line
   width: 300px;
   margin: auto;
   margin-top: 2rem;
@@ -26,8 +27,8 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
+  width: 100%; // Add this line
 `;
-
 const SubmitButton = styled.button`
   padding: 0.5rem;
   background-color: #007bff;

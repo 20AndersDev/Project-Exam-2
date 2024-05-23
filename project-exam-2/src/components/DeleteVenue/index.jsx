@@ -1,4 +1,25 @@
+import styled from "styled-components";
 import { delete_venue } from "../../Shared/Api";
+
+const DeleteButton = styled.button`
+  background-color: #ff0000;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #ff5555;
+    color: white;
+  }
+`;
 
 function DeleteVenue({ id, onDelete }) {
   function deleteVenue() {
@@ -25,7 +46,7 @@ function DeleteVenue({ id, onDelete }) {
 
   return (
     <div>
-      <button onClick={deleteVenue}>Delete</button>
+      <DeleteButton onClick={deleteVenue}>Delete</DeleteButton>
     </div>
   );
 }
