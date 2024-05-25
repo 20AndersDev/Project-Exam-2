@@ -1,6 +1,7 @@
 import { register_user } from "../../Shared/Api";
 import { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 // Styled Components
 const RegisterContainer = styled.div`
@@ -173,9 +174,11 @@ function Register() {
         </CheckboxLabel>
         <Button type="submit">Register</Button>
       </Form>
-      <LoginLink>
-        Already have an account? <a href="/">Log in here</a>
-      </LoginLink>
+      <Link to="/">
+        <LoginLink>
+          <p>Already have an account? Log in here</p>
+        </LoginLink>
+      </Link>
     </RegisterContainer>
   );
 }

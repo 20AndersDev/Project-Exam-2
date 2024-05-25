@@ -1,6 +1,7 @@
 import { login_user } from "../../Shared/Api";
 import { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 // Styled Components
 const LoginContainer = styled.div`
@@ -144,7 +145,9 @@ function LoginForm() {
         <Button type="submit">Login</Button>
       </Form>
       <RegisterLink>
-        Not registered an account yet? <a href="/register">Register</a>
+        <Link to="/register">
+          <p>Register an account here</p>
+        </Link>
       </RegisterLink>
     </LoginContainer>
   );
