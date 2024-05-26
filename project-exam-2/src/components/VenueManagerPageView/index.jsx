@@ -8,6 +8,9 @@ const PageContainer = styled.div`
   padding: 2rem;
   background: #f0f2f5;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Title = styled.h1`
@@ -28,7 +31,7 @@ const Button = styled.button`
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 1rem;
+  margin: 1rem;
   &:hover {
     background: #0056b3;
   }
@@ -36,6 +39,8 @@ const Button = styled.button`
 
 const VenueListContainer = styled.div`
   margin-top: 2rem;
+  width: 80%; // Limit the width of the venue list
+  max-width: 800px; // Set a maximum width
 `;
 
 const VenueItem = styled.div`
@@ -48,7 +53,6 @@ const VenueItem = styled.div`
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   }
 `;
-
 const VenueName = styled.h2`
   font-size: 1.25rem;
   color: #007bff;
@@ -153,9 +157,6 @@ function VenueList() {
     return (
       <VenueListContainer>
         <Subtitle>Venues you are managing:</Subtitle>
-        <Link to="/CreateVenue">
-          <Button>Create a venue here</Button>
-        </Link>
         {data.data.map((venue, index) => (
           <VenueItem key={index}>
             {venue.media && venue.media.length > 0 && venue.media[0].url ? (
@@ -183,6 +184,9 @@ function VenueManagerPageView() {
       <Title>
         Welcome venue manager, {localStorage.getItem("name").replace(/"/g, "")}
       </Title>
+      <Link to="/CreateVenue">
+        <Button>Create a venue here</Button>
+      </Link>
       <VenueList />
     </PageContainer>
   );
