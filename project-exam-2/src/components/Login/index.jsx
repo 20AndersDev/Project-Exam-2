@@ -93,7 +93,7 @@ async function loginUser(url, formData, navigate) {
       localStorage.setItem("token", data.data.accessToken);
       localStorage.setItem("name", JSON.stringify(data.data.name));
       localStorage.setItem("VenueManager", data.data.venueManager);
-      navigate("/HomePage"); // Redirect to /HomePage
+      navigate("/HomePage");
     } else {
       console.log("User not logged in");
     }
