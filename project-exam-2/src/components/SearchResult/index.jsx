@@ -102,8 +102,8 @@ function SearchResults() {
     <ResultsContainer>
       <Title>Search Results</Title>
       {searchResults.data.map((result) => (
-        <Link to={`/SingleVenue?id=${result.id}`}>
-          <ResultItem key={result.id}>
+        <Link to={`/SingleVenue?id=${result.id}`} key={result.id}>
+          <ResultItem>
             {result.media && result.media.length > 0 && (
               <Image src={result.media[0].url} alt={result.media[0].alt} />
             )}

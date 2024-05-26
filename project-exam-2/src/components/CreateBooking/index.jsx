@@ -6,7 +6,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: center; // Add this line
+  align-items: center;
   width: 300px;
   margin: auto;
   margin-top: 2rem;
@@ -27,8 +27,9 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
-  width: 100%; // Add this line
+  width: 100%;
 `;
+
 const SubmitButton = styled.button`
   padding: 0.5rem;
   background-color: #007bff;
@@ -44,6 +45,14 @@ const SubmitButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.ul`
+  color: red;
+  font-size: 0.9rem;
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
+`;
+
 async function CreateBooking(data) {
   try {
     const response = await fetch(create_booking, {
@@ -56,8 +65,12 @@ async function CreateBooking(data) {
       body: JSON.stringify(data),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw errorData;
+    }
+
     const responseData = await response.json();
-    console.log(responseData);
     return responseData;
   } catch (error) {
     console.error("Error creating booking:", error);
@@ -66,12 +79,10 @@ async function CreateBooking(data) {
 }
 
 function BookVenue({ id }) {
-  // Receive id as a prop
   const [formData, setFormData] = useState({
     dateFrom: "",
     dateTo: "",
     guests: 0,
-    venueId: "", // Initialize venueId state
   });
 
   const handleInputChange = (e) => {
@@ -82,20 +93,27 @@ function BookVenue({ id }) {
     }));
   };
 
+  const [errorMessages, setErrorMessages] = useState([]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Set venueId to id when the user submits the form
       await CreateBooking({ ...formData, venueId: id });
       console.log("Booking created successfully");
+      setErrorMessages([]); // Clear error messages on successful booking
     } catch (error) {
       console.error("Error creating booking:", error);
+      if (error.errors) {
+        setErrorMessages(error.errors.map((err) => err.message));
+      } else {
+        setErrorMessages([error.message || "An unexpected error occurred"]);
+      }
     }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h1>Book venue</h1>
+      <h1>Book Venue</h1>
       <Label>
         From Date:
         <Input
@@ -126,6 +144,13 @@ function BookVenue({ id }) {
           required
         />
       </Label>
+      {errorMessages.length > 0 && (
+        <ErrorMessage>
+          {errorMessages.map((error, index) => (
+            <li key={index}>{error}</li>
+          ))}
+        </ErrorMessage>
+      )}
       <SubmitButton type="submit">Create Booking</SubmitButton>
     </Form>
   );

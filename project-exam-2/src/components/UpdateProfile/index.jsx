@@ -47,9 +47,14 @@ const Button = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+`;
+
 function UpdateProfile() {
   const [bio, setBio] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [error, setError] = useState(null);
 
   // Trim the profile name to remove surrounding double quotes
   let profileName = localStorage.getItem("name");
@@ -84,10 +89,14 @@ function UpdateProfile() {
       });
       console.log("Profile updated:", response);
       if (!response.ok) {
-        throw new Error("Failed to update profile");
+        const errorData = await response.json(); // Parse the error response
+        throw new Error(errorData.errors[0].message); // Use the first error message
       }
+
+      console.log("Profile updated:", response);
     } catch (error) {
       console.error("Error updating profile:", error);
+      setError(error.message); // Update the error message
     }
   }
 
@@ -114,6 +123,7 @@ function UpdateProfile() {
           onChange={(e) => setAvatar(e.target.value)}
         />
       </Label>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       <Button onClick={handleUpdate}>Update Profile</Button>
     </UpdateProfileContainer>
   );

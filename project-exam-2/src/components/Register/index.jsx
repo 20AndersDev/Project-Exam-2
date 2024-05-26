@@ -89,7 +89,11 @@ const LoginLink = styled.p`
   }
 `;
 
-async function registerUser(url, formData) {
+const ErrorMessage = styled.p`
+  color: red;
+`;
+
+async function registerUser(url, formData, setErrorMessage) {
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -104,9 +108,11 @@ async function registerUser(url, formData) {
       window.location.href = "/";
     } else {
       console.log("User not registered");
+      setErrorMessage(data.errors.map((error) => error.message));
     }
   } catch (error) {
     console.error("Error registering user:", error);
+    setErrorMessage(["An error occurred while registering. Please try again."]);
   }
 }
 
@@ -117,6 +123,8 @@ function Register() {
     password: "",
     venueManager: false,
   });
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -129,12 +137,13 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await registerUser(register_user, formData);
+    await registerUser(register_user, formData, setErrorMessage);
   };
 
   return (
     <RegisterContainer>
       <RegisterTitle>Register an account</RegisterTitle>
+
       <Form onSubmit={handleSubmit}>
         <Label>
           Email:
@@ -163,6 +172,13 @@ function Register() {
             onChange={handleChange}
           />
         </Label>
+        {errorMessage && (
+          <ErrorMessage>
+            {errorMessage.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ErrorMessage>
+        )}
         <CheckboxLabel>
           Register as Venue Manager:
           <CheckboxInput

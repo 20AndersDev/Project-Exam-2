@@ -99,9 +99,7 @@ function Navbar() {
 
   return (
     <NavbarContainer>
-      <Link to="/HomePage">
-        <LogoLink>Holidaze</LogoLink>
-      </Link>
+      <LogoLink>Holidaze</LogoLink>
 
       <HamburgerMenu onClick={() => setMenuOpen(!menuOpen)}>
         <GiHamburgerMenu size={24} color="white" />

@@ -77,7 +77,13 @@ const RegisterLink = styled.p`
   }
 `;
 
-async function loginUser(url, formData, navigate) {
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+  font-size: 1.5rem;
+`;
+
+async function loginUser(url, formData, navigate, setErrorMessage) {
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -96,9 +102,11 @@ async function loginUser(url, formData, navigate) {
       navigate("/HomePage");
     } else {
       console.log("User not logged in");
+      setErrorMessage(data.errors[0].message);
     }
   } catch (error) {
     console.error("Error logging in user:", error);
+    setErrorMessage("An error occurred while logging in.");
   }
 }
 
@@ -107,6 +115,8 @@ function LoginForm() {
     email: "",
     password: "",
   });
+
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -120,7 +130,7 @@ function LoginForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await loginUser(login_user, formData, navigate);
+    await loginUser(login_user, formData, navigate, setErrorMessage);
   };
 
   return (
@@ -145,8 +155,10 @@ function LoginForm() {
             onChange={handleChange}
           />
         </Label>
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         <Button type="submit">Login</Button>
       </Form>
+
       <RegisterLink>
         <Link to="/register">
           <p>Register an account here</p>
