@@ -33,7 +33,7 @@ function DeleteVenue({ id, onDelete }) {
     })
       .then((response) => {
         if (response.status === 204) {
-          onDelete(); // Call the onDelete callback
+          onDelete();
           console.log("Venue deleted");
         } else {
           return response.json();

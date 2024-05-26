@@ -6,7 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 
 // Styled Components
 const NavbarContainer = styled.nav`
-  background: #ff7f50; /* Warm coral color */
+  background: #ff7f50;
   color: white;
   padding: 1rem 2rem;
   display: flex;
@@ -51,7 +51,7 @@ const NavItem = styled.li`
 `;
 
 const Button = styled.button`
-  background: #ffa500; /* Warm orange color */
+  background: #ffa500;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -59,7 +59,7 @@ const Button = styled.button`
   border-radius: 4px;
   transition: background 0.3s ease;
   &:hover {
-    background: #ff8c00; /* Darker orange */
+    background: #ff8c00;
   }
 `;
 
@@ -75,23 +75,37 @@ const HamburgerMenu = styled.div`
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [menuOpen, setMenuOpen] = useState(false);
-  let localStorageName = localStorage.getItem("name");
+  const [name, setName] = useState("");
 
-  // Trim the localStorageName to remove surrounding double quotes
-  if (localStorageName) {
-    localStorageName = localStorageName.replace(/^"(.*)"$/, "$1");
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!token);
+    setName(localStorage.getItem("name") || "");
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
+    setName("");
     window.location.href = "/";
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     setIsLoggedIn(!!token);
+    setName(localStorage.getItem("name") || "");
+
+    const checkLoginStatus = () => {
+      const newToken = localStorage.getItem("token");
+      setIsLoggedIn(!!newToken);
+      setName(localStorage.getItem("name") || "");
+    };
+
+    window.addEventListener("storage", checkLoginStatus);
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+    };
   }, []);
 
   const accessToken = localStorage.getItem("token");
@@ -99,7 +113,7 @@ function Navbar() {
 
   return (
     <NavbarContainer>
-      <LogoLink>Holidaze</LogoLink>
+      <LogoLink to="/">Holidaze</LogoLink>
 
       <HamburgerMenu onClick={() => setMenuOpen(!menuOpen)}>
         <GiHamburgerMenu size={24} color="white" />
@@ -120,7 +134,7 @@ function Navbar() {
             </NavItem>
             {accessToken && !isVenueManager && (
               <NavItem>
-                <Link to={`/ProfileBookings?name=${localStorageName}`}>
+                <Link to={`/ProfileBookings?name=${name}`}>
                   <p>View your Bookings</p>
                 </Link>
               </NavItem>

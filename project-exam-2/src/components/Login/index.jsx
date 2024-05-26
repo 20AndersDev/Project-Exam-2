@@ -82,6 +82,17 @@ const ErrorMessage = styled.p`
   text-align: center;
   font-size: 1.5rem;
 `;
+const H1 = styled.h1`
+  font-size: 2.5rem;
+  color: #333;
+`;
+
+const H2 = styled.h2`
+  text-align: center;
+  font-size: 2rem;
+  color: #666;
+  margin-bottom: 1rem;
+`;
 
 async function loginUser(url, formData, navigate, setErrorMessage) {
   try {
@@ -135,6 +146,7 @@ function LoginForm() {
 
   return (
     <LoginContainer>
+      <H2>Find your dream holiday today</H2>
       <LoginTitle>Login</LoginTitle>
       <Form onSubmit={handleSubmit}>
         <Label>

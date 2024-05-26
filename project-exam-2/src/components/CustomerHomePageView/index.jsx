@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { all_venues } from "../../Shared/Api";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import useApi from "../../Hooks/Apihooks/";
 import styled from "styled-components";
 
@@ -25,7 +25,11 @@ const VenueList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  max-width: 1200px; /* To center the content and avoid overflow */
+  max-width: 1200px;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
@@ -40,8 +44,8 @@ const VenueItem = styled.li`
   transition: box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  height: 350px; /* Set a fixed height */
-  overflow: hidden; /* Ensure content doesn't overflow */
+  height: auto;
+  overflow: hidden;
 
   &:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -50,10 +54,10 @@ const VenueItem = styled.li`
 
 const VenueImageContainer = styled.div`
   width: 100%;
-  height: 150px; /* Set a fixed height */
+  height: auto;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #e0e0e0; /* Placeholder background color */
+  background-color: #e0e0e0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,12 +66,11 @@ const VenueImageContainer = styled.div`
 
 const VenueImage = styled.img`
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
-  transition: opacity 0.3s ease; /* Transition for image load */
-  opacity: ${({ isLoaded }) =>
-    isLoaded ? 1 : 0}; /* Handle image load state */
+  transition: opacity 0.3s ease;
+  opacity: ${({ isLoaded }) => (isLoaded ? 1 : 0)};
 `;
 
 const AltText = styled.span`
@@ -76,14 +79,17 @@ const AltText = styled.span`
   font-size: 1rem;
   text-align: center;
   padding: 0.5rem;
-  visibility: ${({ isLoaded }) =>
-    isLoaded ? "hidden" : "visible"}; /* Hide alt text when image is loaded */
+  visibility: ${({ isLoaded }) => (isLoaded ? "hidden" : "visible")};
 `;
 
 const VenueName = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.5vw;
   color: #007bff;
   margin: 0.5rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 5vw;
+  }
 
   a {
     text-decoration: none;
@@ -96,18 +102,34 @@ const VenueName = styled.h2`
 `;
 
 const VenueDescription = styled.p`
-  font-size: 1rem;
+  font-size: 1vw;
   color: #555;
+
+  max-height: 3em;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+
+  @media (max-width: 768px) {
+    font-size: 5vw;
+  }
 `;
 
 function DisplayVenues() {
   const { data, isLoading, isError } = useApi(all_venues);
   const [imageLoadStatus, setImageLoadStatus] = useState({});
+  const loadStatusRef = useRef({});
+
+  useEffect(() => {
+    const initialImageStatus = data.reduce((status, venue) => {
+      status[venue.id] = false;
+      return status;
+    }, {});
+    setImageLoadStatus(initialImageStatus);
+    loadStatusRef.current = initialImageStatus;
+  }, [data]);
 
   if (isLoading) {
     return <PageContainer>Loading...</PageContainer>;
@@ -118,7 +140,7 @@ function DisplayVenues() {
   }
 
   const handleImageError = (event, venueId) => {
-    event.target.src = "default-image-url.jpg"; // Provide a path to a default image
+    event.target.src = "default-image-url.jpg";
     setImageLoadStatus((prevState) => ({
       ...prevState,
       [venueId]: false,
@@ -126,10 +148,13 @@ function DisplayVenues() {
   };
 
   const handleImageLoad = (venueId) => {
-    setImageLoadStatus((prevState) => ({
-      ...prevState,
-      [venueId]: true,
-    }));
+    if (!loadStatusRef.current[venueId]) {
+      setImageLoadStatus((prevState) => ({
+        ...prevState,
+        [venueId]: true,
+      }));
+      loadStatusRef.current[venueId] = true;
+    }
   };
 
   return (
@@ -143,7 +168,7 @@ function DisplayVenues() {
                 <>
                   <VenueImage
                     src={venue.media[0].url}
-                    alt={venue.media[0].alt || venue.name}
+                    alt={venue.media.alt}
                     onError={(e) => handleImageError(e, venue.id)}
                     onLoad={() => handleImageLoad(venue.id)}
                     isLoaded={imageLoadStatus[venue.id]}

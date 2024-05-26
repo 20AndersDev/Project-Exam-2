@@ -56,14 +56,13 @@ const EditButton = styled.button`
 `;
 
 function DisplayProfile() {
-  const [profile, setProfile] = useState(null); // State to hold profile data
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
         let profileName = localStorage.getItem("name");
 
-        // Trim the profileName to remove surrounding double quotes
         if (profileName) {
           profileName = profileName.replace(/^"(.*)"$/, "$1");
         }
@@ -79,16 +78,15 @@ function DisplayProfile() {
         }
         const data = await response.json();
         console.log(data);
-        setProfile(data); // Update state with fetched profile data
+        setProfile(data);
       } catch (error) {
         console.error("Error getting profile:", error);
       }
     }
 
-    fetchData(); // Call fetchData when the component mounts
-  }, []); // Empty dependency array ensures fetchData is only called once
+    fetchData();
+  }, []);
 
-  // Render profile data if available
   return (
     <ProfileContainer>
       <Title>Your Profile</Title>

@@ -11,7 +11,7 @@ async function updateVenue(id, data) {
       },
     }).then((response) => {
       if (response.status === 204) {
-        window.location.reload(); // Refresh the page
+        window.location.reload();
       } else {
         console.log("Venue updated");
         return response.json();

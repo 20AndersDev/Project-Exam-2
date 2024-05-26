@@ -62,11 +62,11 @@ function SearchResults() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    const query = queryParams.get("q"); // Get the query from the URL
+    const query = queryParams.get("q");
 
     const fetchData = async () => {
       try {
-        const response = await fetch(`${search_venues}?q=${query}`); // Construct the search URL with the query
+        const response = await fetch(`${search_venues}?q=${query}`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -81,9 +81,7 @@ function SearchResults() {
 
     fetchData();
 
-    return () => {
-      // Cleanup function
-    };
+    return () => {};
   }, []);
 
   if (isLoading) {

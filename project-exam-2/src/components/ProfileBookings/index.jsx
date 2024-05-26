@@ -49,7 +49,6 @@ function Displaybookings() {
       try {
         let profileName = localStorage.getItem("name");
 
-        // Trim the profileName to remove surrounding double quotes
         if (profileName) {
           profileName = profileName.replace(/^"(.*)"$/, "$1");
         }
@@ -69,7 +68,7 @@ function Displaybookings() {
 
         const data = await response.json();
         console.log(data);
-        setBookings(data.data); // Update state with fetched data
+        setBookings(data.data);
       } catch (error) {
         console.error("Error getting bookings by profile:", error);
       }

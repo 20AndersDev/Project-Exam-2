@@ -25,8 +25,8 @@ const Input = styled.input`
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 1em;
-  width: 100%; // Add this line
-  box-sizing: border-box; // Add this line
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`

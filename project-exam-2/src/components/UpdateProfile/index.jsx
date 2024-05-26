@@ -56,7 +56,6 @@ function UpdateProfile() {
   const [avatar, setAvatar] = useState("");
   const [error, setError] = useState(null);
 
-  // Trim the profile name to remove surrounding double quotes
   let profileName = localStorage.getItem("name");
   if (profileName) {
     profileName = profileName.replace(/^"(.*)"$/, "$1");
@@ -68,12 +67,10 @@ function UpdateProfile() {
     try {
       const requestBody = {};
 
-      // Add bio to request body if it's not empty
       if (bio.trim() !== "") {
         requestBody.bio = bio;
       }
 
-      // Add avatar url to request body if it's not empty
       if (avatar.trim() !== "") {
         requestBody.avatar = { url: avatar };
       }
@@ -88,15 +85,20 @@ function UpdateProfile() {
         body: JSON.stringify(requestBody),
       });
       console.log("Profile updated:", response);
+
+      if (response.status === 200) {
+        window.location.href = "/Profile";
+      }
+
       if (!response.ok) {
-        const errorData = await response.json(); // Parse the error response
-        throw new Error(errorData.errors[0].message); // Use the first error message
+        const errorData = await response.json();
+        throw new Error(errorData.errors[0].message);
       }
 
       console.log("Profile updated:", response);
     } catch (error) {
       console.error("Error updating profile:", error);
-      setError(error.message); // Update the error message
+      setError(error.message);
     }
   }
 

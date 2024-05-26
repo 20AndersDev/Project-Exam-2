@@ -18,7 +18,7 @@ async function postApikey() {
     return data;
   } catch (error) {
     console.error("Error creating API key:", error);
-    throw error; // Throw the error for handling outside this function if necessary
+    throw error;
   }
 }
 
