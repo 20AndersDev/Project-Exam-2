@@ -32,6 +32,13 @@ Hosting:
  - To install all dependecies``` npm install ``` 
  - To run the project run ``` npm run start ```
 
+## Known issues:
+
+ - I am aware of a bug with the navbar. It does not update after login. This issue came up during the final hours and was not able to debug in time. After loging, refresh the page to get the correct links.
+
+ -  For storing of the API keys, Localstorage was used. I am aware that this is not best practice and the API key should never be exposed in the frontend.
+
+ - title is not updated on none of the pages and there is som design flaws. use might need to refresh page to get to profile and see their venues
 
 ## Contributions
 This is an school project so it is not open for contributions
