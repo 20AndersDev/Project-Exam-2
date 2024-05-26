@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import SearchBar from "../SearchBar";
@@ -15,8 +15,9 @@ const NavbarContainer = styled.nav`
   flex-wrap: wrap;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
-
-const Logo = styled.h1`
+const LogoLink = styled(Link)`
+  color: white;
+  text-decoration: none;
   font-size: 1.5rem;
   margin: 0;
 `;
@@ -66,7 +67,7 @@ const HamburgerMenu = styled.div`
   display: none;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: 950px) {
     display: block;
   }
 `;
@@ -87,12 +88,20 @@ function Navbar() {
     window.location.href = "/";
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    setIsLoggedIn(!!token);
+  }, []);
+
   const accessToken = localStorage.getItem("token");
   const isVenueManager = JSON.parse(localStorage.getItem("VenueManager"));
 
   return (
     <NavbarContainer>
-      <Logo>Holidaze</Logo>
+      <Link to="/HomePage">
+        <LogoLink>Holidaze</LogoLink>
+      </Link>
 
       <HamburgerMenu onClick={() => setMenuOpen(!menuOpen)}>
         <GiHamburgerMenu size={24} color="white" />

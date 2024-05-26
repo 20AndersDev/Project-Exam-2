@@ -53,6 +53,7 @@ const VenueItem = styled.div`
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   }
 `;
+
 const VenueName = styled.h2`
   font-size: 1.25rem;
   color: #007bff;
@@ -111,12 +112,42 @@ function VenueList() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [keysLoaded, setKeysLoaded] = useState(false);
 
   useEffect(() => {
-    const storedApiKey = localStorage.getItem("apikey");
-    const storedToken = localStorage.getItem("token");
+    let intervalId;
+    let timeoutId;
 
-    if (storedApiKey && storedToken) {
+    const checkKeys = () => {
+      const storedApiKey = localStorage.getItem("apikey");
+      const storedToken = localStorage.getItem("token");
+      if (storedApiKey && storedToken) {
+        setKeysLoaded(true);
+        clearInterval(intervalId);
+        clearTimeout(timeoutId);
+      }
+    };
+
+    intervalId = setInterval(checkKeys, 500);
+    timeoutId = setTimeout(() => {
+      clearInterval(intervalId);
+      if (!localStorage.getItem("apikey") || !localStorage.getItem("token")) {
+        setKeysLoaded(false);
+        setIsLoading(false);
+        setError(new Error("Failed to load API key and token"));
+      }
+    }, 5000);
+
+    checkKeys();
+
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (keysLoaded) {
       const fetchData = async () => {
         try {
           const replaceNameUrl = `${venues_by_name}/${localStorage
@@ -132,9 +163,11 @@ function VenueList() {
       };
       fetchData();
     }
-  }, []);
+  }, [keysLoaded]);
 
-  console.log(data);
+  if (!keysLoaded) {
+    return <div>Loading keys...</div>;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -170,7 +203,6 @@ function VenueList() {
             <VenueDetails>{venue.description}</VenueDetails>
             <VenueDetails>Max guests: {venue.maxGuests}</VenueDetails>
             <VenueDetails>Price: {venue.price}</VenueDetails>
-            {/* Add additional venue details here */}
           </VenueItem>
         ))}
       </VenueListContainer>

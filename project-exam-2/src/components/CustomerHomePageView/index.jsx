@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { all_venues } from "../../Shared/Api";
+import { useState } from "react";
 import useApi from "../../Hooks/Apihooks/";
 import styled from "styled-components";
 
@@ -47,12 +48,36 @@ const VenueItem = styled.li`
   }
 `;
 
-const VenueImage = styled.img`
+const VenueImageContainer = styled.div`
   width: 100%;
   height: 150px; /* Set a fixed height */
   border-radius: 8px;
+  overflow: hidden;
+  background-color: #e0e0e0; /* Placeholder background color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const VenueImage = styled.img`
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  margin-bottom: 1rem;
+  border-radius: 8px;
+  transition: opacity 0.3s ease; /* Transition for image load */
+  opacity: ${({ isLoaded }) =>
+    isLoaded ? 1 : 0}; /* Handle image load state */
+`;
+
+const AltText = styled.span`
+  position: absolute;
+  color: #555;
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.5rem;
+  visibility: ${({ isLoaded }) =>
+    isLoaded ? "hidden" : "visible"}; /* Hide alt text when image is loaded */
 `;
 
 const VenueName = styled.h2`
@@ -82,6 +107,7 @@ const VenueDescription = styled.p`
 
 function DisplayVenues() {
   const { data, isLoading, isError } = useApi(all_venues);
+  const [imageLoadStatus, setImageLoadStatus] = useState({});
 
   if (isLoading) {
     return <PageContainer>Loading...</PageContainer>;
@@ -91,10 +117,19 @@ function DisplayVenues() {
     return <PageContainer>Error fetching data</PageContainer>;
   }
 
-  console.log(data);
-
-  const handleImageError = (event) => {
+  const handleImageError = (event, venueId) => {
     event.target.src = "default-image-url.jpg"; // Provide a path to a default image
+    setImageLoadStatus((prevState) => ({
+      ...prevState,
+      [venueId]: false,
+    }));
+  };
+
+  const handleImageLoad = (venueId) => {
+    setImageLoadStatus((prevState) => ({
+      ...prevState,
+      [venueId]: true,
+    }));
   };
 
   return (
@@ -103,15 +138,34 @@ function DisplayVenues() {
       <VenueList>
         {data.map((venue) => (
           <VenueItem key={venue.id}>
-            {venue.media && venue.media.length > 0 && venue.media[0].url ? (
-              <VenueImage
-                src={venue.media[0].url}
-                alt={venue.media[0].alt || venue.name}
-                onError={handleImageError}
-              />
-            ) : (
-              <VenueImage src="default-image-url.jpg" alt="Default Image" />
-            )}
+            <VenueImageContainer>
+              {venue.media && venue.media.length > 0 && venue.media[0].url ? (
+                <>
+                  <VenueImage
+                    src={venue.media[0].url}
+                    alt={venue.media[0].alt || venue.name}
+                    onError={(e) => handleImageError(e, venue.id)}
+                    onLoad={() => handleImageLoad(venue.id)}
+                    isLoaded={imageLoadStatus[venue.id]}
+                  />
+                  <AltText isLoaded={imageLoadStatus[venue.id]}>
+                    {venue.media[0].alt || venue.name}
+                  </AltText>
+                </>
+              ) : (
+                <>
+                  <VenueImage
+                    src="default-image-url.jpg"
+                    alt="Default Image"
+                    onLoad={() => handleImageLoad(venue.id)}
+                    isLoaded={imageLoadStatus[venue.id]}
+                  />
+                  <AltText isLoaded={imageLoadStatus[venue.id]}>
+                    Default Image
+                  </AltText>
+                </>
+              )}
+            </VenueImageContainer>
             <VenueName>
               <Link to={`/SingleVenue?id=${venue.id}`}>{venue.name}</Link>
             </VenueName>
