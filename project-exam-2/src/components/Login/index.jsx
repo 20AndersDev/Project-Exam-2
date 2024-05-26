@@ -2,6 +2,7 @@ import { login_user } from "../../Shared/Api";
 import { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const LoginContainer = styled.div`
@@ -76,7 +77,7 @@ const RegisterLink = styled.p`
   }
 `;
 
-async function loginUser(url, formData) {
+async function loginUser(url, formData, navigate) {
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -92,7 +93,7 @@ async function loginUser(url, formData) {
       localStorage.setItem("token", data.data.accessToken);
       localStorage.setItem("name", JSON.stringify(data.data.name));
       localStorage.setItem("VenueManager", data.data.venueManager);
-      window.location.href = "/HomePage";
+      navigate("/HomePage"); // Redirect to /HomePage
     } else {
       console.log("User not logged in");
     }
@@ -107,6 +108,8 @@ function LoginForm() {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -117,7 +120,7 @@ function LoginForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await loginUser(login_user, formData);
+    await loginUser(login_user, formData, navigate);
   };
 
   return (

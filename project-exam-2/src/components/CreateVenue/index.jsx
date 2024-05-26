@@ -1,6 +1,37 @@
+import styled from "styled-components";
 import { create_venue } from "../../Shared/Api";
 import { useState } from "react";
 
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 0 auto;
+`;
+
+const Label = styled.label`
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 async function postVenue(url, formData) {
   try {
     const response = await fetch(url, {
@@ -29,21 +60,21 @@ function CreateVenue() {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    maxGuests: null, // Initialize as null or an empty string
-    price: null, // Initialize as null or an empty string
+    maxGuests: null,
+    price: null,
   });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value.trim(), // Remove leading and trailing spaces
+      [name]: value.trim(),
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Convert maxGuests and price to numbers
+
     const numMaxGuests =
       formData.maxGuests !== null ? Number(formData.maxGuests) : null;
     const numPrice = formData.price !== null ? Number(formData.price) : null;
@@ -55,47 +86,45 @@ function CreateVenue() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Description:
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Capacity:
-          <input
-            type="number"
-            name="maxGuests"
-            value={formData.maxGuests}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Price:
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit">Create venue</button>
-      </form>
-    </div>
+    <Form onSubmit={handleSubmit}>
+      <Label>
+        Name:
+        <Input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+      </Label>
+      <Label>
+        Description:
+        <Input
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+      </Label>
+      <Label>
+        Capacity:
+        <Input
+          type="number"
+          name="maxGuests"
+          value={formData.maxGuests}
+          onChange={handleChange}
+        />
+      </Label>
+      <Label>
+        Price:
+        <Input
+          type="number"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+        />
+      </Label>
+      <Button type="submit">Create venue</Button>
+    </Form>
   );
 }
 
