@@ -14,23 +14,28 @@ In this Project Exam i was tasked with creating an platform were an user can boo
 
  Design: 
    - Figma
+     
  Planning ( Gantt and kanban):
    - Github Projects
+     
  Framework:
    - React
+     
  Styling:
    - Styled components
+     
 Hosting:
    - Netlify
 
 
 ## Project setup
- - clone this repo: https://github.com/Noroff-Anders/JavaScript-Frameworks---Course-Assignment.git
+ - clone this repo: https://github.com/Noroff-Anders/Project-Exam-2.git
 
  - In terminal run the following commands:
 
- - To install all dependecies``` npm install ``` 
- - To run the project run ``` npm run start ```
+    To install all dependecies``` npm install ```
+   
+    To run the project run ``` npm run start ```
 
 ## Known issues:
 
