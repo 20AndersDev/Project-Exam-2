@@ -33,9 +33,9 @@ Hosting:
 
  - In terminal run the following commands:
 
-    To install all dependecies``` npm install ```
+    To install all dependecies: ``` npm install ```
    
-    To run the project run ``` npm run start ```
+    To run the project run:  ``` npm run start ```
 
 ## Known issues:
 
